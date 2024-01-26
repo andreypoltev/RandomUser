@@ -2,4 +2,13 @@
 plugins {
     id("com.android.application") version "8.2.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
+
+
+//    kotlin("jvm") version "1.9.21" // or kotlin("multiplatform") or any other kotlin plugin
+//    kotlin("plugin.serialization") version "1.9.21"
+
+
+    kotlin("plugin.serialization") version "1.9.10"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13" apply false
+
 }

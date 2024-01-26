@@ -129,7 +129,7 @@ data class APIResponseModel(
             @SerialName("name")
             val name: String = "",
             @SerialName("value")
-            val value: Any? = null
+            val value: Int? = null
         )
 
         @Serializable
