@@ -1,6 +1,5 @@
-package com.andreypoltev.randomuser
+package com.andreypoltev.randomuser.database
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -10,7 +9,7 @@ import androidx.room.TypeConverters
     entities = [User::class],
     exportSchema = true
 )
-@TypeConverters(com.andreypoltev.randomuser.TypeConverters::class)
+@TypeConverters(com.andreypoltev.randomuser.util.TypeConverters::class)
 abstract class UserDataBase : RoomDatabase() {
 
     abstract val userDao: UserDao

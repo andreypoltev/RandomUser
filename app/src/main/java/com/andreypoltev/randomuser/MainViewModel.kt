@@ -1,27 +1,84 @@
 package com.andreypoltev.randomuser
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.andreypoltev.randomuser.database.User
+import com.andreypoltev.randomuser.database.UserDao
+import com.andreypoltev.randomuser.model.APIResponseModel
+import com.andreypoltev.randomuser.util.mapData
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
-import io.ktor.http.ContentType.Application.Json
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainViewModel(userDao: UserDao) : ViewModel() {
+class MainViewModel(private val userDao: UserDao) : ViewModel() {
+
+    val isLoading = mutableStateOf(false)
 
     val allUsers = userDao.flowOfAllUsers()
+
+    val dbSize = mutableStateOf(0)
+
+    val currentUser = mutableStateOf(User())
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
 
+//            dbSize.value = userDao.getRowCount()
+
             if (userDao.getRowCount() == 0) {
-                getApiResponse()
+
+                val results = getApiResponse().results
+
+                userDao.insertUsers(mapData(results))
+
+            }
+
+
+        }
+    }
+
+
+    fun getCurrentUser(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val user = userDao.getUserById(id)
+
+            if (user != null)
+                currentUser.value = user
+
+
+        }
+    }
+
+    fun refreshUserList() {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            try {
+
+                isLoading.value = true
+
+                val newListOfUsers = getApiResponse().results
+
+                if (newListOfUsers.isNotEmpty()) {
+                    userDao.clearTable()
+                    userDao.insertUsers(mapData(newListOfUsers))
+                }
+
+            } catch (e: Exception) {
+
+                Log.e("ERROR", "An error occurred: ${e.message}", e)
+
+
+            } finally {
+                isLoading.value = false
+
             }
 
 
@@ -38,7 +95,7 @@ class MainViewModel(userDao: UserDao) : ViewModel() {
         }
 
 
-        val link = "https://randomuser.me/api/"
+        val link = "https://randomuser.me/api/?results=10"
 
         val response = client.get(link)
         Log.d("MyResponse", response.body())
