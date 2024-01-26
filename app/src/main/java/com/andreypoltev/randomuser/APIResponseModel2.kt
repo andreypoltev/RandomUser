@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class APIResponseModel(
+data class APIResponseModel2(
     @SerialName("results")
     val results: List<Result> = listOf(),
     @SerialName("info")
@@ -59,7 +59,7 @@ data class APIResponseModel(
             @SerialName("country")
             val country: String = "",
             @SerialName("postcode")
-            val postcode: String = "",
+            val postcode: Int = 0,
             @SerialName("coordinates")
             val coordinates: Coordinates = Coordinates(),
             @SerialName("timezone")
@@ -129,7 +129,7 @@ data class APIResponseModel(
             @SerialName("name")
             val name: String = "",
             @SerialName("value")
-            val value: String? = null
+            val value: String = ""
         )
 
         @Serializable
