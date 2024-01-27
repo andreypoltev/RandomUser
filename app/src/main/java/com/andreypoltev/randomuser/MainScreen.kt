@@ -1,5 +1,6 @@
 package com.andreypoltev.randomuser
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.andreypoltev.randomuser.composables.CustomProgressIndicator
+import com.andreypoltev.randomuser.database.User
 import com.andreypoltev.randomuser.util.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +40,6 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController) {
 
     val users by viewModel.allUsers.collectAsState(initial = emptyList())
 
-    val size by viewModel.dbSize
 
 
 //    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -75,19 +76,14 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController) {
                     ), verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
 
-//            item {
-//                Text(text = size.toString())
-//            }
-
                     items(users) { user ->
 
-                        Card(modifier = Modifier.fillMaxWidth(), onClick = {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
 
-
-                            navController.navigate(Routes.userDetailsScreen + "/${user.id}")
-                            viewModel.getCurrentUser(user.userId)
-
-                        }) {
+                                navController.navigate(Routes.userDetailsScreen + "/${user.userId}")
+                            }) {
 
                             Row(
                                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp),
@@ -107,6 +103,8 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController) {
                                     Text(text = user.name.title + " " + user.name.first + " " + user.name.last)
                                     Text(text = user.location.postcode + ", " + user.location.country + ", " + user.location.state + ", " + user.location.city)
                                     Text(text = user.phone)
+                                    Text(text = user.cell)
+                                    Text(text = user.userId.toString())
                                 }
 
 

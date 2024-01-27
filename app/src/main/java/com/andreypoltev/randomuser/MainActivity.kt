@@ -17,7 +17,7 @@ import com.andreypoltev.randomuser.ui.theme.RandomUserTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val usersDb by lazy {
+    private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
             UserDataBase::class.java,
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return MainViewModel(usersDb.userDao) as T
+                    return MainViewModel(db.userDao) as T
                 }
             }
         }

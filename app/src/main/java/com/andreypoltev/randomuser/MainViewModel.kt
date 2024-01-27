@@ -15,6 +15,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val userDao: UserDao) : ViewModel() {
@@ -22,10 +24,6 @@ class MainViewModel(private val userDao: UserDao) : ViewModel() {
     val isLoading = mutableStateOf(false)
 
     val allUsers = userDao.flowOfAllUsers()
-
-    val dbSize = mutableStateOf(0)
-
-    val currentUser = mutableStateOf(User())
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -44,18 +42,7 @@ class MainViewModel(private val userDao: UserDao) : ViewModel() {
         }
     }
 
-
-    fun getCurrentUser(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-
-            val user = userDao.getUserById(id)
-
-            if (user != null)
-                currentUser.value = user
-
-
-        }
-    }
+    fun userEntry(id: Int) = userDao.flowUserEntry(id)
 
     fun refreshUserList() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -84,7 +71,6 @@ class MainViewModel(private val userDao: UserDao) : ViewModel() {
 
         }
     }
-
 
     suspend fun getApiResponse(): APIResponseModel {
 

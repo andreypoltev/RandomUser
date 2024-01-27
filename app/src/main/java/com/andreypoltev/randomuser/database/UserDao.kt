@@ -12,24 +12,27 @@ interface UserDao {
     @Query("SELECT COUNT(*) FROM User")
     suspend fun getRowCount(): Int
 
+    //
     @Query("SELECT * FROM User")
     fun flowOfAllUsers(): Flow<List<User>>
 
     @Query("SELECT * FROM User WHERE id = :id")
-    fun flowOfExistingUser(id: Int): Flow<User?>
+    fun flowUserEntry(id: Int): Flow<User>
 
-    @Query("SELECT * FROM User WHERE id = :id")
-    suspend fun getUserById(id: Int): User?
-
-    @Insert
-    suspend fun insertUser(user: User)
-
+    //
+//    @Query("SELECT * FROM User WHERE id = :id")
+//    suspend fun getUserById(id: Int): User?
+//
+//    @Insert
+//    suspend fun insertUser(user: User)
+//
     @Insert
     suspend fun insertUsers(users: List<User>)
 
-    @Delete
-    suspend fun deleteUser(user: User)
-
+    //
+//    @Delete
+//    suspend fun deleteUser(user: User)
+//
     @Query("DELETE FROM User")
     suspend fun clearTable()
 }
